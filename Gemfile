@@ -50,6 +50,7 @@ gem "bootsnap", require: false
 
 gem "passenger", ">= 5.0.25", require: "phusion_passenger/rack_handler"
 gem "slim-rails"
+gem 'telegram-bot', git: 'https://github.com/telegram-bot-rb/telegram-bot'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

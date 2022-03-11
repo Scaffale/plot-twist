@@ -1,24 +1,6 @@
-# README
+# Plot Twist
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Webhook
+1. Get your telgram bot token
+2. Set your token in app
+3. `curl --data "url=https://your.bots.url/YOUR_TELEGRAM_TOKEN_HERE" https://api.telegram.org/botYOUR_TELEGRAM_TOKEN_HERE/setWebhook`
