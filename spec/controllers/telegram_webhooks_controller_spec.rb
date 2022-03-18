@@ -18,7 +18,7 @@ RSpec.describe TelegramWebhooksController, type: :telegram_bot_controller do
             type: 'mpeg4_gif',
             id: '1234567',
             mpeg4_url: 'https://futurebots.it/plot-bot' + '/gif/domani_ti_spo.gif' # ,
-            # thumb_url: [ENV['SERVER_URL'], 'placeholder.jpg'].join('/')
+            thumb_url: 'https://futurebots.it/plot-bot' + '/placeholder.jpg'
           }] , { next_offset: 0 })
         subject
       end
