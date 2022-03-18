@@ -17,8 +17,8 @@ RSpec.describe TelegramWebhooksController, type: :telegram_bot_controller do
         allow(controller).to receive(:answer_inline_query).with([{
             type: 'mpeg4_gif',
             id: '1234567',
-            mpeg4_url: 'https://futurebots.it/plot-bot' + '/gif/domani_ti_spo.gif',
-            thumb_url: 'https://futurebots.it/plot-bot' + '/placeholder.jpg'
+            mpeg4_url: 'https://futurebots.it/plot-bot' + '/gif/dom_ti_spo.gif',
+            thumb_url: 'https://futurebots.it/plot-bot' + '/placeholder.jpeg'
           }] , { next_offset: 0 })
         subject
       end
