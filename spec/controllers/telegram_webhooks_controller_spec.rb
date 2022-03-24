@@ -3,25 +3,143 @@ require 'telegram/bot/updates_controller/rspec_helpers'
 
 RSpec.describe TelegramWebhooksController, type: :telegram_bot_controller do
   describe "inline_query" do
-
     subject { controller.inline_query(query, offset) }
 
-    let(:query) {}
-    let(:offset) {}
-
-    context "when empty query" do
+    context 'correct query' do
       let(:offset) { 0 }
-      let(:query) { '' }
+      let(:query) { 'che' }
 
-      it 'should answer with 3 results' do
-        allow(controller).to receive(:answer_inline_query).with([{
-            type: 'mpeg4_gif',
-            id: '1234567',
-            mpeg4_url: 'https://futurebots.it/plot-bot' + '/gif/dom_ti_spo.gif',
-            thumb_url: 'https://futurebots.it/plot-bot' + '/placeholder.jpeg'
-          }] , { next_offset: 0 })
-        subject
+      context 'when no other choosen results' do
+        fixtures :sentences
+
+        it 'should answer with 3 results' do
+          allow(controller).to receive(:answer_inline_query).with([{ id: '000514364000002267.mp4',
+                                                                     mpeg4_url: "#{ENV['HOST']}/gifs/000514364000002267.mp4",
+                                                                     thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                     type: 'mpeg4_gif' },
+                                                                   { id: '000520426000002738.mp4',
+                                                                     mpeg4_url: "#{ENV['HOST']}/gifs/000520426000002738.mp4",
+                                                                     thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                     type: 'mpeg4_gif' },
+                                                                   { id: '000523175000001788.mp4',
+                                                                     mpeg4_url: "#{ENV['HOST']}/gifs/000523175000001788.mp4",
+                                                                     thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                     type: 'mpeg4_gif' }], { next_offset: 3 })
+          subject
+        end
+      end
+
+      context 'choosen result present' do
+        fixtures :sentences
+
+        before do
+          create(:choosen_result, text: query)
+        end
+
+        it 'should answer with 1 choosen and 2 new' do
+          allow(controller).to receive(:answer_inline_query).with([{ id: 'MyString',
+                                                                     mpeg4_url: "#{ENV['HOST']}/gifs/MyString",
+                                                                     thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                     type: 'mpeg4_gif' },
+                                                                   { id: '000514364000002267.mp4',
+                                                                     mpeg4_url: "#{ENV['HOST']}/gifs/000514364000002267.mp4",
+                                                                     thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                     type: 'mpeg4_gif' },
+                                                                   { id: '000520426000002738.mp4',
+                                                                     mpeg4_url: "#{ENV['HOST']}/gifs/000520426000002738.mp4",
+                                                                     thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                     type: 'mpeg4_gif' }], { next_offset: 3 })
+          subject
+        end
+      end
+
+      context 'query empty' do
+        let(:query) { '' }
+
+        context 'when choosen results > 10' do
+          before do
+            14.times.each do |n|
+              create(:choosen_result, uniq_id: "MyString#{n}")
+            end
+          end
+
+          it 'should retrun 10 random results' do
+            srand 0
+            allow(controller).to receive(:answer_inline_query).with([{ id: 'MyString0',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString0",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString1',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString1",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString2',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString2",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString3',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString3",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString4',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString4",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString5',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString5",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString6',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString6",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString7',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString7",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString8',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString8",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' },
+                                                                     { id: 'MyString9',
+                                                                       mpeg4_url: "#{ENV['HOST']}/gifs/MyString9",
+                                                                       thumb_url: "#{ENV['HOST']}/placeholder.jpg",
+                                                                       type: 'mpeg4_gif' }], { next_offset: 10 })
+            subject
+          end
+        end
+
+        context 'when choosen results 0' do
+          it 'should retrun 0 results' do
+            allow(controller).to receive(:answer_inline_query).with([], { next_offset: 10 })
+            subject
+          end
+        end
       end
     end
   end
+
+  describe '#chosen_inline_result' do
+    subject { controller.chosen_inline_result(result_uniq_id, query) }
+    let(:query) { 'che' }
+    let(:result_uniq_id) { '123456789' }
+
+    context 'choosen_result' do
+      context 'choosen_result not present' do
+        it 'should create choosen_result' do
+          expect { subject }.to change { ChoosenResult.count }.by 1
+        end
+      end
+
+      context 'choosen_result present' do
+        before do
+          create(:choosen_result, uniq_id: result_uniq_id, text: query, hits: 1)
+        end
+        it 'should increment hits on choosed result' do
+          expect { subject }.to change { ChoosenResult.all.last.hits }.by 1
+        end
+      end
+    end
+  end
+
 end

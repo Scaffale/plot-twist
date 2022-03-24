@@ -36,3 +36,7 @@
 /config/credentials.yml.enc
 
 **/.DS_Store
+
+.env.test
+.env.development
+.env.production

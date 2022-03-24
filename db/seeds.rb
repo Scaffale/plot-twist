@@ -1,7 +1,17 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+include SentencesHelper
+
+Dir.glob("#{Rails.root}/data/*.srt").each do |file|
+  file_name = file.split('/').last
+  file_name = file_name.split('.srt')[0]
+  p "Analizzo: #{file_name}"
+  next if Sentence.where(file_name: file_name).exists?
+
+  opened_file = open(file, 'r:ISO-8859-1:UTF-8').readlines
+  split_sentences(opened_file).each do |sentence_analized|
+    Sentence.create(file_name: file_name,
+                    file_filter: file_name.split('.').first,
+                    end_time: sentence_analized[:time_end],
+                    start_time: sentence_analized[:time_start],
+                    text: sentence_analized[:sentence])
+  end
+end

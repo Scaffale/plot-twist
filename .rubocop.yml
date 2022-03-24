@@ -6,3 +6,9 @@ Style/StringLiterals:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+# Style/HashSyntax:
+#   Enabled: false

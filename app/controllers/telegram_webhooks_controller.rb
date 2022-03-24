@@ -1,11 +1,47 @@
 class TelegramWebhooksController < Telegram::Bot::UpdatesController
+  include QueryHelper
+  include SentencesHelper
+  # include BotExplanationHelper
+
+  RESULTS_FOR_QUERY = 3
+  RESULTS_FOR_BLANK_QUERY = 10
+
   def inline_query(query, offset)
-    result = [{
-        type: 'mpeg4_gif',
-        id: '1234567',
-        mpeg4_url: 'https://futurebots.it/plot-bot' + '/gif/dom_ti_spo.gif',
-        thumb_url: 'https://futurebots.it/plot-bot' + '/placeholder.jpeg'
-      }]
-    answer_inline_query(result, { next_offset: 0 })
+    results, next_offset = build_results_from_query(query, offset.to_i)
+    answer_inline_query results, { next_offset: }
+  end
+
+  def chosen_inline_result(result_id, query)
+    choosen_result = ChoosenResult.find_by(uniq_id: result_id)
+    if choosen_result.nil?
+      ChoosenResult.create!(uniq_id: result_id, text: sanitize(query), hits: 1)
+    else
+      choosen_result.increment!(:hits)
+    end
+  end
+
+  private
+
+  def build_results(results_query, extra_params)
+    results_query.map do |result|
+      {
+        type: "mpeg4_gif",
+        id: uniq_id(result.new_name(extra_params)),
+        mpeg4_url: [ENV["HOST"], "gifs", result.new_name(extra_params)].join("/"),
+        thumb_url: [ENV["HOST"], "placeholder.jpg"].join("/")
+      }
+    end
+  end
+
+  def build_results_from_query(query, offset)
+    if query.blank?
+      results = build_results(build_query_choosen_results(limit: RESULTS_FOR_BLANK_QUERY, offset:), {})
+      [results, (offset + RESULTS_FOR_BLANK_QUERY)]
+    else
+      results_query, extra_params = search_sentence(query, offset)
+      results_query.map { |r| r.build_gif(extra_params) if r.instance_of?(Sentence) }
+      results = build_results(results_query, extra_params)
+      [results, (offset + RESULTS_FOR_QUERY)]
+    end
   end
 end
