@@ -9,8 +9,8 @@ gem "rails", "~> 7.0.2", ">= 7.0.2.3"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
-# Use sqlite3 as the database for Active Record
-gem "sqlite3", "~> 1.4"
+# db
+gem "pg"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
@@ -51,7 +51,7 @@ gem "bootsnap", require: false
 gem "dotenv-rails"
 gem "factory_bot"
 gem "factory_bot_rails"
-gem "passenger", ">= 5.0.25", require: "phusion_passenger/rack_handler"
+gem "passenger", require: "phusion_passenger/rack_handler"
 gem "slim-rails"
 gem "telegram-bot", git: "https://github.com/telegram-bot-rb/telegram-bot"
 gem 'whenever', require: false

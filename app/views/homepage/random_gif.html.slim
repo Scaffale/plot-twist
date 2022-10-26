@@ -1,0 +1,9 @@
+h1
+  |random_gif
+hr
+= link_to('main page', root_path)
+hr
+= @gif_name
+br
+video[controls autoplay=true loop=true mute=true]
+  source src="gifs/#{@gif_name}"

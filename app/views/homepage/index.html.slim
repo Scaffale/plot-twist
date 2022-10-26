@@ -1,2 +1,13 @@
 h1
   |Alive
+hr
+= link_to(random_gif_path)
+  |Random Gif
+hr
+form
+  input#webhook
+  button
+    |Set webhook
+hr
+h3
+  = "You have #{Sentence.count} sentences"

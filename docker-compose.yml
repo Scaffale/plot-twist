@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    volumes:
+      # where to put your db
+      - ../rambot/db_persistent_folder:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      # current folder, mandatory
+      - .:/plot-twist
+      # data folder containing both .srt and .webm files
+      - ../rambot/data:/plot-twist/data
+      # folder where to convert video files to .webm
+      - ../rambot/to_convert:/plot-twist/to_convert
+      # folder where to save the created gifs (mp4)
+      - ../rambot/public_gifs:/plot-twist/public/gifs
+    ports:
+      - "3000:3000"
+      - "80:80"
+      - "88:88"
+      - "8443:8443"
+    environment:
+      # SKIP_FILE_CONVERSION: 'true'
+      HOST: 'your.server/url'
+      # TELEGRAM_WEBHOOK_LINK: 'false'
+      # ROOT_PATH: '/'
+      # PORT: 443
+      BOT_TOKEN: ''
+      BOT_USERNAME: ''
+      # BOT_SERVER: ''
+      DB_PASSWORD: postgres
+    depends_on:
+      - db
