@@ -18,6 +18,7 @@ RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 443 80 88 8443 3000
 
+HEALTHCHECK --start-period=60s CMD curl --fail http://localhost:3000 || exit 1
 
 # Configure the main process to run when running the image
 CMD ["rails", "server", "-b", "0.0.0.0"]

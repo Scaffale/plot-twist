@@ -7,6 +7,7 @@ rm -f /rambot/tmp/pids/server.pid
 rails assets:precompile
 rails db:prepare
 # rails link_webhook
+whenever --update-crontab
 
 # Then exec the container's main process (what's set as CMD in the Dockerfile).
 exec "$@"
