@@ -51,7 +51,7 @@ gem "bootsnap", require: false
 gem "dotenv-rails"
 gem "factory_bot"
 gem "factory_bot_rails"
-gem "passenger", require: "phusion_passenger/rack_handler"
+# gem "passenger", require: "phusion_passenger/rack_handler"
 gem "slim-rails"
 gem "telegram-bot", git: "https://github.com/telegram-bot-rb/telegram-bot"
 gem 'whenever', require: false

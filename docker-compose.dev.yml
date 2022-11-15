@@ -10,8 +10,11 @@ services:
       POSTGRES_USER: postgres # do not change
       POSTGRES_DB: postgres # do not change
   web:
-    image: martinogiacchetti/plot_twist:latest
+    build: .
+    # command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
+      # current folder, mandatory
+      # - .:/plot-twist
       # data folder containing both .srt and .webm files
       - ../rambot/data:/plot-twist/data
       # folder where to convert video files to .webm
