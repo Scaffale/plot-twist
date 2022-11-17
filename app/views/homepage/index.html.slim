@@ -4,10 +4,20 @@ hr
 = link_to(random_gif_path)
   |Random Gif
 hr
-form
-  input#webhook
-  button
-    |Set webhook
+h3
+  = "You have #{@sentence_count} sentences"
 hr
 h3
-  = "You have #{Sentence.count} sentences"
+  |Some infos
+p
+  |Bot tokend ends in
+  b
+    = " #{@bot_token_end}"
+p
+  |Bot name
+  b
+    = " #{@bot_name}"
+p
+  |Webhook at
+  b
+    = " #{@webhook}"
