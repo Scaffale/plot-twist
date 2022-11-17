@@ -21,3 +21,8 @@ p
   |Webhook at
   b
     = " #{@webhook}"
+  br
+  = link_to('Set webhook', set_webhook_path)
+  br
+  - if @webhook_response == 'true'
+    | Webhook OK

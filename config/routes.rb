@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   root 'homepage#index'
-  get :random_gif, to: 'homepage#random_gif'
+  controller :homepage do
+    get :random_gif
+    get :set_webhook
+    post :set_webhook
+  end
   telegram_webhook TelegramWebhooksController
 end
