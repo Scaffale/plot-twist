@@ -14,8 +14,8 @@ WORKDIR /plot-twist
 
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client ffmpeg && apt-get install -qq -y --no-install-recommends cron && rm -rf /var/lib/apt/lists/*
 
-RUN bundle install
-# RUN bundle install --without development test
+# RUN bundle install
+RUN bundle install --without development test
 
 RUN chmod +x docker/entrypoint.sh
 RUN chmod +x docker/production_start.sh

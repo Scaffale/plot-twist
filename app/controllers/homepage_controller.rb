@@ -1,4 +1,6 @@
 class HomepageController < ApplicationController
+  before_action :check_for_lockup, only: :set_webhook
+
   def index
     @sentence_count = Sentence.count
     @bot_token_end = ENV['BOT_TOKEN'][-4..-1]
