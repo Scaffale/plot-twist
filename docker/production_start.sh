@@ -1,7 +1,9 @@
 #!/bin/sh
 
-echo "preparing DB"
 # Prepare Database
-RAILS_ENV=production rails db:prepare
+echo "Preparing DB"
+RAILS_ENV=production bin/rails db:prepare
 
-bundle exec puma -C config/puma.rb
+bundle exec passenger start --port=80 --app-type rack --environment production
+
+# bundle exec puma -C config/puma.rb

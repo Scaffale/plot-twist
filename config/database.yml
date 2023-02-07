@@ -5,12 +5,13 @@
 #   gem "sqlite3"
 #
 default: &default
-  host: db
   adapter: postgresql
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: postgres
+  database: <%= ENV['DB_HOST'] %>
+  host: <%= ENV['DB_HOST'] %>
   password: <%= ENV['DB_PASSWORD'] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
+  username: <%= ENV['DB_USERNAME'] %>
 
 development:
   <<: *default
@@ -25,4 +26,3 @@ test:
 
 production:
   <<: *default
-  database: plot_twist_production

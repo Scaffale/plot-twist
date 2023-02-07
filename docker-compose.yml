@@ -1,14 +1,5 @@
 version: "3.9"
 services:
-  db:
-    image: postgres
-    volumes:
-      # where to put your db
-      - ../rambot/db_persistent_folder:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres # do not change
-      POSTGRES_DB: postgres # do not change
   web:
     image: martinogiacchetti/plot_twist:latest
     volumes:
@@ -19,12 +10,14 @@ services:
       # folder where to save the created gifs (mp4)
       - ../rambot/public_gifs:/plot-twist/public/gifs
     ports:
-      - "3000:3000"
-      - "80:80"
-      - "88:88"
-      - "8443:8443"
+      - "3000:80"
+      # - "443:443"
+
     environment:
+      DB_HOST: postgres # same as db service name
+      DB_USERNAME: postgres
       DB_PASSWORD: postgres
+      DB_NAME: plot_tiwst
       BOT_TOKEN: 'mymagicaltoken'
       BOT_USERNAME: 'my magical username'
       HOST: 'your.server/url'
@@ -35,5 +28,21 @@ services:
       # ROOT_PATH: '/'
       # PORT: 443
       # BOT_SERVER: ''
+      SECRET_KEY_BASE: 'my secret key'
     depends_on:
-      - db
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: plot_tiwst
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ../rambot/db_persistent_folder:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
