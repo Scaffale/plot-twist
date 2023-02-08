@@ -10,6 +10,7 @@ ENV RAILS_ENV production
 ENV NODE_ENV production
 
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client ffmpeg && apt-get install -qq -y --no-install-recommends cron && rm -rf /var/lib/apt/lists/*
+# RUN apt-get install -y ca-certificates
 
 # https://github.com/phusion/passenger-docker#using-nginx-and-passenger
 RUN rm -f /etc/service/nginx/down
@@ -19,6 +20,13 @@ WORKDIR /home/app/webapp
 
 # This copies your web app with the correct ownership.
 COPY --chown=app:app . /home/app/webapp
+
+# Configure nginx
+ADD secret_key.conf /etc/nginx/main.d/secret_key.conf
+ADD gzip_max.conf /etc/nginx/conf.d/gzip_max.conf
+
+# SET ruby version
+# RUN bash -lc 'rvm --default use ruby-3.1.3'
 
 # RUN bundle install
 RUN bundle install
@@ -33,6 +41,10 @@ RUN bundle exec rails assets:precompile SECRET_KEY_BASE=fake_secure_for_compile
 EXPOSE 80
 
 HEALTHCHECK --start-period=60s CMD curl --fail http://localhost:80 || exit 1
+
+# Update certificates
+# RUN bash -lc 'rvm get stable'
+# RUN update-ca-certificates
 
 # Configure the main process to run when running the image
 CMD ["docker/production_start.sh"]
