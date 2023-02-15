@@ -4,40 +4,25 @@ services:
     image: martinogiacchetti/plot_twist:latest
     volumes:
       # data folder containing both .srt and .webm files
-      - ../rambot/data:/plot-twist/data
-      # folder where to convert video files to .webm
-      - ../rambot/to_convert:/plot-twist/to_convert
+      - ../rambot/data:/home/app/webapp/data
       # folder where to save the created gifs (mp4)
-      - ../rambot/public_gifs:/plot-twist/public/gifs
+      - ../rambot/public_gifs:/home/app/webapp/public/gifs
+      - ./.env.production:/home/app/webapp/.env.production
+      - ./cert/website.fullchain.pem:/etc/letsencrypt/live/npm-1/fullchain.pem
+      - ./cert/website.privkey.pem:/etc/letsencrypt/live/npm-1/privkey.pem
     ports:
       - "3000:80"
-
-    environment:
-      DB_HOST: postgres # same as db service name
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: plot_tiwst
-      BOT_TOKEN: 'mymagicaltoken'
-      BOT_USERNAME: 'my magical username'
-      HOST: 'your.server/url'
-      LOCKUP_CODEWORD: 'secret'
-      LOCKUP_HINT: 'Something that you do not tell everyone.'
-      # SKIP_FILE_CONVERSION: 'true'
-      # TELEGRAM_WEBHOOK_LINK: 'false'
-      # ROOT_PATH: '/'
-      # PORT: 443
-      # BOT_SERVER: ''
-      SECRET_KEY_BASE: 'my secret key'
+      - "88:443"
     depends_on:
-      postgres:
+      db:
         condition: service_healthy
 
-  postgres:
+  db:
     image: postgres
     environment:
-      POSTGRES_DB: plot_tiwst
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: plot_tiwst_production # Must be same name as in rails app
+      POSTGRES_USER: postgres # don't change
+      POSTGRES_PASSWORD: postgres # don't change
     volumes:
       - ../rambot/db_persistent_folder:/var/lib/postgresql/data
     healthcheck:

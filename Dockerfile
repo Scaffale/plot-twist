@@ -1,5 +1,10 @@
 # syntax=docker/dockerfile:1
 FROM phusion/passenger-ruby31
+# ubuntu 20.04
+
+# ora sto cercando di usare la porta 88
+# se fallisce cerco di andare con apache
+# dubbio sempre su certbot, link a tutta la cartella forse è melgio che il singolo file
 
 LABEL maintainer="martino.giacchetti@gmail.com"
 LABEL name="plot-twist"
@@ -9,12 +14,13 @@ ENV HOME /root
 ENV RAILS_ENV production
 ENV NODE_ENV production
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client ffmpeg && apt-get install -qq -y --no-install-recommends cron && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y nodejs postgresql-client ffmpeg && apt-get install -qq -y --no-install-recommends cron && rm -rf /var/lib/apt/lists/*
 # RUN apt-get install -y ca-certificates
 
 # https://github.com/phusion/passenger-docker#using-nginx-and-passenger
 RUN rm -f /etc/service/nginx/down
 ADD webapp.conf /etc/nginx/sites-enabled/webapp.conf
+ADD nginx.conf /etc/nginx/nginx.conf
 RUN mkdir /home/app/webapp
 WORKDIR /home/app/webapp
 
@@ -38,7 +44,7 @@ ENTRYPOINT ["docker/entrypoint.sh"]
 
 RUN bundle exec rails assets:precompile SECRET_KEY_BASE=fake_secure_for_compile
 
-EXPOSE 80
+EXPOSE 80 443 88
 
 HEALTHCHECK --start-period=60s CMD curl --fail http://localhost:80 || exit 1
 
