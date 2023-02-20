@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   web:
+    container_name: plot_twist_web
     image: martinogiacchetti/plot_twist:latest
     volumes:
       # data folder containing both .srt and .webm files
@@ -8,11 +9,12 @@ services:
       # folder where to save the created gifs (mp4)
       - ../rambot/public_gifs:/home/app/webapp/public/gifs
       - ./.env.production:/home/app/webapp/.env.production
-      - ./cert/website.fullchain.pem:/etc/letsencrypt/live/npm-1/fullchain.pem
-      - ./cert/website.privkey.pem:/etc/letsencrypt/live/npm-1/privkey.pem
+      # - ./cert/website.fullchain.pem:/etc/letsencrypt/live/npm-1/fullchain.pem
+      # - ./cert/website.privkey.pem:/etc/letsencrypt/live/npm-1/privkey.pem
+      - ./apache-sites-enables:/etc/apache2/sites-enabled
     ports:
-      - "3000:80"
-      - "88:443"
+      - 3000:3000
+      # - "88:443"
     depends_on:
       db:
         condition: service_healthy

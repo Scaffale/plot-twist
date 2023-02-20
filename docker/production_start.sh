@@ -9,10 +9,11 @@ echo "Preparing DB"
 RAILS_ENV=production bin/rails db:prepare
 RAILS_ENV=production bin/rails db:seed
 
-service nginx restart &
+# service nginx stop
+# service apache2 start
 
 echo "Ready to go"
-tail -f /home/app/webapp/log/production.log
-# bundle exec passenger start --port=88 --app-type rack --environment production
+# tail -f /home/app/webapp/log/production.log
+# bundle exec passenger start --port=80 --app-type rack --environment production
 
-# bundle exec puma -C config/puma.rb
+bundle exec puma -C config/puma.rb
