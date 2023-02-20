@@ -11,7 +11,7 @@ services:
       - ./.env.production:/home/app/webapp/.env.production
       # - ./cert/website.fullchain.pem:/etc/letsencrypt/live/npm-1/fullchain.pem
       # - ./cert/website.privkey.pem:/etc/letsencrypt/live/npm-1/privkey.pem
-      - ./apache-sites-enables:/etc/apache2/sites-enabled
+      # - ./apache-sites-enables:/etc/apache2/sites-enabled
     ports:
       - 3000:3000
       # - "88:443"

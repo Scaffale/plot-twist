@@ -33,8 +33,7 @@ rerun.txt
 pickle-email-*.html
 
 
-/.rspec
-/.rubocop.yml
+.rubocop.yml
 docker-compose*
 README.md
 
